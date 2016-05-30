@@ -5,7 +5,6 @@ class MY_Model extends CI_Model {
 	protected $_primary_key = 'id';
 	protected $_order_by = '';
 	public $rules = array();
-	protected $_timestamps = FALSE;
 	
 	function __construct() {
 		parent::__construct();
@@ -43,13 +42,6 @@ class MY_Model extends CI_Model {
 	}
 	
 	public function save($data, $id = NULL){
-		
-		// Set timestamps
-		if ($this->_timestamps == TRUE) {
-			$now = date('Y-m-d H:i:s');
-			$id || $data['date_created'] = $now;
-			$data['date_modified'] = $now;
-		}
 		
 		// Insert
 		if ($id === NULL) {
