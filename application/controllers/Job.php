@@ -24,15 +24,16 @@ class Job extends CI_Controller {
 			$data['job'] = $this->job_model->job_detail(array('slug' => $where));
 			$id = $data['job']['id'];
 
-			$view = $data['job']['views'];
-			$view += 1;
-			$this->job_model->save(array('views' => $view), $id);
 			$this->load->view('job/single', $data);
 			var_dump($data);
 		}
 		
 		if(empty($data['job'])){
 			show_404();
+		}else {
+			$view = $data['job']['views'];
+			$view += 1;
+			$this->job_model->save(array('views' => $view), $id);
 		}
 		
 
@@ -105,6 +106,33 @@ class Job extends CI_Controller {
 			return FALSE;
 		} else {
 			return TRUE;
+		}
+	}
+
+	public function _timeago($time_ago){
+		$strtime = strtotime($time_ago);
+		$time_elapsed = time() - $strtime;
+		$timej = date('j', $time_elapsed);
+
+		if ($time_elapsed < 35) {
+			return 'Just Now';
+		}
+		$tokens = array(
+			3600 => 'hr',
+			60 => 'min',
+			1 => 'sec'
+		);
+
+		foreach ($tokens as $str => $v) {
+			$diff = round($time_elapsed / $str);
+			if ($diff >= 1){
+				if ($timej == 1) {
+					return $diff.' '.$v.(($diff>1) ? 's' : '').' ago';
+				} else {
+					$date = date('F j \a\t h:ia', $strtime);
+					return $date;
+				}
+			}
 		}
 	}
 }
